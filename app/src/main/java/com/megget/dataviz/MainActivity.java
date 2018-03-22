@@ -3,6 +3,7 @@ package com.megget.dataviz;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -12,14 +13,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    /**
+     * Map pour la recherche.
+     */
     private GoogleMap mMap;
+    private RangeSeekBar<Integer> rangeSeekBar;
 
     /**
-     * Permet de créer l'activité, créer la map et le slider
+     * Permet de créer l'activité, créer la map et le slider.
      * @param savedInstanceState
      */
     @Override
@@ -31,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //affiche le slider
-        final RangeSeekBar<Integer> rangeSeekBar = findViewById(R.id.slider);
+        rangeSeekBar = findViewById(R.id.slider);
         rangeSeekBar.setRangeValues(1900, 2020);
         rangeSeekBar.setSelectedMinValue(1900);
         rangeSeekBar.setSelectedMaxValue(2020);
@@ -44,24 +50,40 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Permet d'afficher le menu, cette methode est appelée qu'une fois à la première apparition du menu
+     * Permet d'afficher le menu, cette methode est appelée qu'une fois à la première apparition du menu.
      * @param menu l'ocjet à modifier/remplir pour définir notre menu
      * @return true pour être affiché, si on return false le menu ne s'affiche pas
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu); //modifie/remplie l'objet menu avec les attributs récupérés dans le xml pour créer notre menu sous forme d'objet
+
         super.onCreateOptionsMenu(menu);
         return true;
     }
 
+    /**
+     * Permet de capturer le bouton cliqué dans le menu.
+     * @param item le bouton cliqué
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.search:
-                Intent searchIntent=new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(searchIntent);
+            case R.id.search: //dans le cas du bouton rechercher
+                Intent searchIntent=new Intent(MainActivity.this, SearchActivity.class); //on créer l'Intent qui lancera l'activité, on lui passe: Context de dépare (this) et classe d'arrivée
+                //on créer les donnees à passer
+                int[] dates=new int[]{rangeSeekBar.getSelectedMinValue(), rangeSeekBar.getSelectedMaxValue()};
+                LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+
+                double[] coord=new double[]{bounds.southwest.longitude, bounds.northeast.longitude, bounds.southwest.latitude, bounds.northeast.latitude};
+                //on les ajoute à l'Intent
+                searchIntent.putExtra("com.megget.dataviz.DATES", dates);
+                searchIntent.putExtra("com.megget.dataviz.COORDONNEES", coord);
+                startActivity(searchIntent); //on lance l'activité
+
                 return true;
+
             case R.id.connection:
                 Intent connectionIntent=new Intent(MainActivity.this, ConnectionActivity.class);
                 startActivity(connectionIntent);
