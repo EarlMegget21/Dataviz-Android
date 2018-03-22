@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:rsb="http://schemas.android.com/apk/res-auto"
 android:orientation="vertical"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
@@ -37,12 +36,9 @@ android:layout_height="match_parent">
             android:textAlignment="center" />
     </LinearLayout>
 
-    <org.florescu.android.rangeseekbar.RangeSeekBar
+    <com.megget.dataviz.RangeSeekBar
         android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        rsb:thumbDisabled="@drawable/custom_slider_thumb"
-        rsb:thumbNormal="@drawable/custom_slider_thumb"
-        rsb:thumbPressed="@drawable/custom_slider_thumb" />
+        android:layout_height="48dp" />
 
 </LinearLayout>
