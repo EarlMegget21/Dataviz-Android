@@ -1,0 +1,7 @@
+Reste à faire:
+    -Mécanisme de connexion (même compte que pour le site web)
+    -Actions Backend (CRUD) pour les utilisateurs connectés (donc sécurité avec)
+    -Afficher les autres informations des émissions (date, login, emplacement, mp3)
+    -Ajouter lecture MP3
+    -Ajouter bouton retour sur détails d'un évènement
+    -Ajouter fonctionnalités lire/écrire commentaire pour tout le monde

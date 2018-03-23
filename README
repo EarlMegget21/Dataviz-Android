@@ -1,0 +1,2 @@
+L'URL fourni est prévu pour un accès en localhost, il faut donc soit modifier l'URL pour un accès distant, soit hébergé le code PHP qui se trouve
+ dans le répository original Dataviz (site web) sur ce compte GitHub.

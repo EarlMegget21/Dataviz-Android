@@ -2,15 +2,12 @@ package com.megget.dataviz;
 
 import android.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Classe qui gère la liste d'émissions
@@ -21,6 +18,14 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
      * Liste des émissions
      */
     private ArrayList<Podcast> podcasts=new ArrayList<>();
+
+    /**
+     * Constructeur à partir d'une liste.
+     * @param podcasts liste des émissions
+     */
+    public PodcastAdapter(ArrayList<Podcast> podcasts) {
+        this.podcasts = podcasts;
+    }
 
     /**
      * Retourne le nombre d'évènements dans la liste
