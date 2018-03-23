@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 /**
  * Activité affichant la liste des émission correspondantes à la recherche.
@@ -24,17 +23,22 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        //créer la liste qui va afficher les éléments
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.list);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new PodcastAdpater());
+        setTitle("Liste des émissions");
         //on récupère les données de recherche sur l'Intent qui a lancé l'activité
         Intent i=getIntent();
         double[] coord=i.getDoubleArrayExtra("com.megget.dataviz.COORDONNEES");
         int[] dates=i.getIntArrayExtra("com.megget.dataviz.DATES");
+        //on doit utiliser 10.0.2.2 à la place de localhost parce que l'émulateur se trouve sous un autre sous réseau (mettre un nom de domaine distant si on déploie l'appli sur un vrai téléphone)
+        String url="http://10.0.2.2/dataviz/index.php?controller=event&action=searchEventsJSON&mindate="+dates[0]+"&maxdate="+dates[1]+"&xa="+coord[0]+"&ya="+coord[1]+"&xb="+coord[2]+"&yb="+coord[3]+"&keyword=";
 
-        TextView test=(TextView)findViewById(R.id.testDonnees);
-        test.setText("Coordonnees: "+coord[0]+";"+coord[1]+";"+coord[2]+";"+coord[3]+";"+" ,dates: "+dates[0]+" "+dates[1]);
+        //créer et initialise à vide la liste qui va afficher les éléments
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.list);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        PodcastAdapter elem=new PodcastAdapter();
+        rv.setAdapter(elem);
+        //créer la tâche parallèle qui exécutera la recherche et mettra à jour le contenu de la liste affichée à l'écran
+        RequestAsyncTask request=new RequestAsyncTask(rv); //on lui passe la liste
+        request.execute(url); //on lui passe l'URL
     }
 
     /**

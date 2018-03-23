@@ -8,29 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Classe qui gère la liste d'émissions
  */
-public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastViewHolder> {
+public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastViewHolder> {
 
     /**
      * Liste des émissions
      */
-    private final List<Pair<String, String>> characters = Arrays.asList(
-            Pair.create("Guerre du vietnam", "Brave, curious, and crafty, she has been prophesied by the witches to help the balance of life"),
-            Pair.create("Hilter n'est pas mort", "Lyra's daemon, nicknamed Pan."),
-            Pair.create("Excursion en Alaska", "Lyra's friends"),
-            Pair.create("La Général connu", "Lyra's uncle"),
-            Pair.create("Marisa Coulter", "Intelligent and beautiful, but extremely ruthless and callous."),
-            Pair.create("Iorek Byrnison", "Armoured bear, Rightful king of the panserbjørne. Reduced to a slave of the human village Trollesund."),
-            Pair.create("Serafina Pekkala", "Witch who closely follows Lyra on her travels."),
-            Pair.create("Lee Scoresby", "Texan aeronaut who transports Lyra in his balloon. Good friend with Iorek Byrnison."),
-            Pair.create("Ma Costa", "Gyptian woman whose son, Billy Costa is abducted by the \"Gobblers\"."),
-            Pair.create("John Faa", "The King of all gyptian people.")
-    );
+    private ArrayList<Podcast> podcasts=new ArrayList<>();
 
     /**
      * Retourne le nombre d'évènements dans la liste
@@ -38,7 +28,7 @@ public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastV
      */
     @Override
     public int getItemCount() {
-        return characters.size();
+        return podcasts.size();
     }
 
     /**
@@ -63,8 +53,8 @@ public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastV
      */
     @Override
     public void onBindViewHolder(PodcastViewHolder holder, int position) {
-        Pair<String, String> pair = characters.get(position);
-        holder.display(pair);
+        Podcast podcast = podcasts.get(position);
+        holder.display(podcast);
     }
 
     /**
@@ -75,13 +65,13 @@ public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastV
         /**
          * Champs où afficher le contenu dans la vue
          */
-        private final TextView name;
+        private final TextView nom;
         private final TextView description;
 
         /**
          * Contenu de la cellule de la liste à afficher
          */
-        private Pair<String, String> currentPair;
+        private Podcast current;
 
         /**
          * Création à partir d'un layout
@@ -90,7 +80,7 @@ public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastV
         public PodcastViewHolder(final View itemView) {
             super(itemView);
 
-            name = ((TextView) itemView.findViewById(R.id.name));
+            nom = ((TextView) itemView.findViewById(R.id.name));
             description = ((TextView) itemView.findViewById(R.id.description));
 
             //affiche le contenu dans un pop up si on click sur l'élément
@@ -98,8 +88,8 @@ public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastV
                 @Override
                 public void onClick(View view) {
                     new AlertDialog.Builder(itemView.getContext())
-                            .setTitle(currentPair.first)
-                            .setMessage(currentPair.second)
+                            .setTitle(current.getNom())
+                            .setMessage(current.getDescription())
                             .show();
                 }
             });
@@ -107,12 +97,16 @@ public class PodcastAdpater extends RecyclerView.Adapter<PodcastAdpater.PodcastV
 
         /**
          * Affiche le contenu de la cellule de la liste dans le layout correspondant
-         * @param pair cellule de la liste
+         * @param podcast cellule de la liste
          */
-        public void display(Pair<String, String> pair) {
-            currentPair = pair;
-            name.setText(pair.first);
-            description.setText(pair.second);
+        public void display(Podcast podcast) {
+            current = podcast;
+            nom.setText(podcast.getNom());
+            description.setText(podcast.getDescription());
         }
+    }
+
+    public void setPodcasts(ArrayList<Podcast> podcasts) {
+        this.podcasts = podcasts;
     }
 }

@@ -108,22 +108,16 @@ public class RangeSeekBar<T extends Number> extends AppCompatImageView {
     public RangeSeekBar(Context context) {
         super(context);
         init(context, null);
-        TextView min=(TextView)findViewById(R.id.dateMax);
-        System.out.println("const"+min);
     }
 
     public RangeSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
-        TextView min=(TextView)findViewById(R.id.dateMax);
-        System.out.println("const"+min);
     }
 
     public RangeSeekBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
-        TextView min=(TextView)findViewById(R.id.dateMax);
-        System.out.println("const"+min);
     }
 
     private T extractNumericValueFromAttributes(TypedArray a, int attribute, int defaultValue) {

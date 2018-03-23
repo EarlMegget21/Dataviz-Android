@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Dataviz");
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -45,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         rangeSeekBar.setMinTextView(min);
         TextView max=(TextView)findViewById(R.id.dateMax);
         rangeSeekBar.setMaxTextView(max);
-
-        setTitle("Dataviz");
     }
 
     /**
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 int[] dates=new int[]{rangeSeekBar.getSelectedMinValue(), rangeSeekBar.getSelectedMaxValue()};
                 LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 
-                double[] coord=new double[]{bounds.southwest.longitude, bounds.northeast.longitude, bounds.southwest.latitude, bounds.northeast.latitude};
+                double[] coord=new double[]{bounds.southwest.longitude, bounds.southwest.latitude, bounds.northeast.longitude, bounds.northeast.latitude};
                 //on les ajoute à l'Intent
                 searchIntent.putExtra("com.megget.dataviz.DATES", dates);
                 searchIntent.putExtra("com.megget.dataviz.COORDONNEES", coord);
