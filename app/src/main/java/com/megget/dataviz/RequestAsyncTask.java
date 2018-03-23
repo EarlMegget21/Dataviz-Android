@@ -2,6 +2,7 @@ package com.megget.dataviz;
 
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,14 +22,14 @@ public class RequestAsyncTask extends AsyncTask<String, Void, ArrayList<Podcast>
     /**
      * Liste rendu à l'écran.
      */
-    private final RecyclerView liste;
+    private final PodcastAdapter listManager;
 
     /**
      * Constructeur à partir d'une vue liste
      * @param view liste rendu à l'écran
      */
-    public RequestAsyncTask(RecyclerView view) {
-        this.liste = view;
+    public RequestAsyncTask(PodcastAdapter view) {
+        this.listManager = view;
     }
 
     /**
@@ -40,9 +41,10 @@ public class RequestAsyncTask extends AsyncTask<String, Void, ArrayList<Podcast>
      */
     @Override
     protected ArrayList<Podcast> doInBackground(String... params) {
-        String url= params[0];
+        String url = params[0];
+        //simulation traitement long pour progress bar
         /*try { Thread.sleep(1000); }
-        catch (InterruptedException e) { e.printStackTrace(); }*/
+        catch (InterruptedException e) { Log.w("AsyncTask", "Interrupted"); }*/
 
         InputStream is = null; //flux récupérant les données
         String rep; //réponse HTTP au format JSON
@@ -57,11 +59,11 @@ public class RequestAsyncTask extends AsyncTask<String, Void, ArrayList<Podcast>
             conn.connect(); //connexion
             is = conn.getInputStream(); //récupère le flux contenant les données
 
-            rep= readIt(is); // lit le flux pour avoir la réponse de type String en format JSON
-            listeEmissions=Podcast.parse(rep); //parse pour créer la liste
+            rep = readIt(is); // lit le flux pour avoir la réponse de type String en format JSON
+            listeEmissions = Podcast.parse(rep); //parse pour créer la liste
         } catch (Exception e) { //si il y a un problème on créer une liste vide et on log les erreurs
             e.printStackTrace();
-            listeEmissions=new ArrayList<>();
+            listeEmissions = new ArrayList<>();
         } finally {
             // On ferme le flux dans tous les cas
             if (is != null) {
@@ -82,9 +84,7 @@ public class RequestAsyncTask extends AsyncTask<String, Void, ArrayList<Podcast>
      */
     @Override
     protected void onPostExecute(ArrayList<Podcast> result) {
-        PodcastAdapter elem=new PodcastAdapter(); //créer l'adapter
-        elem.setPodcasts(result); //lui passe la liste
-        liste.setAdapter(elem); //attache l'adapter à la vue pour l'affichage
+        listManager.setPodcasts(result); //lui passe la liste
     }
 
     /**

@@ -8,11 +8,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 /**
  * Activité affichant la liste des émission correspondantes à la recherche.
  */
 public class SearchActivity extends AppCompatActivity {
+
+    /**
+     * Tâche parralèle qui effectue la requête.
+     */
+    RequestAsyncTask request;
 
     /**
      * Création activité, récupération des données de recherche passées puis lancement de la recherche
@@ -34,11 +41,19 @@ public class SearchActivity extends AppCompatActivity {
         //créer et initialise à vide la liste qui va afficher les éléments
         final RecyclerView rv = (RecyclerView) findViewById(R.id.list);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        PodcastAdapter elem=new PodcastAdapter();
-        rv.setAdapter(elem);
-        //créer la tâche parallèle qui exécutera la recherche et mettra à jour le contenu de la liste affichée à l'écran
-        RequestAsyncTask request=new RequestAsyncTask(rv); //on lui passe la liste
+        PodcastAdapter manager=new PodcastAdapter();
+        rv.setAdapter(manager);
+        //initialise et lance la tâche parallèle qui exécutera la recherche et mettra à jour le contenu de la liste affichée à l'écran
+        request=new RequestAsyncTask(manager); //on lui passe la liste
         request.execute(url); //on lui passe l'URL
+        //attache l'evenement 'change' à l'Adapter pour qu'il rende la progressbar invisible si il y a un notifyDataChanged
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+        manager.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                progress.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**
@@ -66,5 +81,16 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Méthode qui permettra d'interrompre le telechargement des résultats si on ferme l'activité entre temps.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(request!=null){
+            request.cancel(true);
+        }
     }
 }

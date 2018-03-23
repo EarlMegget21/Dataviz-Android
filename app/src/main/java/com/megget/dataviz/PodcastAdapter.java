@@ -108,5 +108,6 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
 
     public void setPodcasts(ArrayList<Podcast> podcasts) {
         this.podcasts = podcasts;
+        notifyDataSetChanged(); //indique que les données ont changé donc force le rafraichissement de l'affichage avec l'evenement 'change'
     }
 }
